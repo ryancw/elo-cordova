@@ -1,11 +1,14 @@
-repositories{    
+repositories{
+  jcenter()
   flatDir {
     dirs 'libs'
   }
 }
 
+
+
 dependencies {
-  compile (name:'eloviewsdk', ext:'aar')
+  compile(name:'eloviewsdk', ext:'aar')
 }
 
 android {
