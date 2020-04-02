@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="cordova-plugin-eloplugin" version="0.0.1">
+    <name>Elo Cordova</name>
+
+    <description>An Android Cordova plugin that allows access to parameters set inside of EloView.</description>
+    <license>MIT</license>
+
+    <keywords>cordova,android,elo,eloview</keywords>
+    <repo>https://github.com/ryancw/elo-cordova.git</repo>
+    <issue>https://github.com/ryancw/elo-cordova/issues</issue>
+  
+    <engines>
+        <engine name="cordova" version=">=3.0.0"/>
+    </engines>
+  
+    <js-module src="www/eloplugin.js" name="eloPlugin">
+        <clobbers target="window.plugins.eloPlugin" />
+    </js-module>
+
+    
+    <platform name="android">
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="EloPlugin">
+                <param name="android-package" value="com.ryancw.cordova.plugin.EloPlugin"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/EloPlugin.java" target-dir="src/com/ryancw/cordova/plugin" />
+
+        <resource-file src="eloviewsdk.aar" target="libs/eloviewsdk.aar" />
+        <framework src="src/android/extras.gradle" custom="true" type="gradleReference" />
+    </platform>
+</plugin>
