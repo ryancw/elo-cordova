@@ -2,9 +2,17 @@ package com.ryancw.cordova.plugin;
 
 import com.eloview.sdk.EloSecureUtil;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Bundle;
+import android.util.Log;
+import android.os.Environment;
 
 import java.io.StringReader;
 import java.util.Properties;
+import java.io.File;
+import java.io.FileInputStream;
+
 import java.io.IOException;
 
 import org.apache.cordova.CallbackContext;
@@ -12,6 +20,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 public class EloPlugin extends CordovaPlugin {
   @Override
@@ -22,44 +31,55 @@ public class EloPlugin extends CordovaPlugin {
         return false;
       }
 
+      String param;      
+      try {
+        JSONObject options = args.getJSONObject(0);
+        param = options.getString("param");        
+      } catch (JSONException e) {
+        callbackContext.error("Error encountered: " + e.getMessage());
+        return false;
+      }
+      
       // here for you m'lady, is m'context       
       Context mContext = this.cordova.getActivity().getApplicationContext();
-      String ret = EloSecureUtil.getDeviceInfo(mContext);
+      String deviceInfo = this.getDeviceInfo(); //EloSecureUtil.getDeviceInfo(mContext);
 
-      Boolean sdkExists = EloSecureUtil.isEloViewSDKExists(mContext);
+      Properties prop = new Properties();
+      try {
+        prop.load(new StringReader(deviceInfo));
+      } catch (IOException e) {
+        callbackContext.error("Error encountered: " + e.getMessage());
+        return false;
+      }
 
-      String sdkVer = EloSecureUtil.getSDKVersion(mContext);
+      String result = prop.getProperty(param);
 
-      String allInfo = "device_info: " + ret + " | sdk_enabled: " + sdkExists.toString() + " | sdk_version: " + sdkVer;
-      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, allInfo);
-      callbackContext.sendPluginResult(pluginResult);    
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, deviceInfo);
+      callbackContext.sendPluginResult(pluginResult); 
       return true;
-
-      //String result = parseProp(ret, "pin");
-      // Properties prop = new Properties();
-      // try {
-      //   prop.load(new StringReader(ret));
-      // } catch (IOException e) {
-      //   e.printStackTrace();
-      // }
-
-      // String result;
-
-      // try {
-      //   JSONObject jsonProps = new JSONObject(prop);
-      //   result = jsonProps.toString();
-      // } catch (Exception e) {
-      //   result = "PARSEERZZERROR:" + e.toString();
-      // }            
-
-      // PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
-      // callbackContext.sendPluginResult(pluginResult);
-      // return true;
   }
 
-  // private String parseProp(String str, String key) {
-  //     // Properties prop = new Properties();
-  //     // prop.load(new StringReader(str));
-  //     // prop.getProperty(key);
-  // }
+  private static String getDeviceInfo() {
+    String ret = null;
+    Properties prop = new Properties();
+    FileInputStream in = null;
+    File file = null;
+    String sdcardEloPath = Environment.getExternalStorageDirectory().getPath() + "/elo/device_info";
+
+    try {
+        file = new File(sdcardEloPath, "deviceinfo.properties");
+        if (file.exists()) {
+            in = new FileInputStream(file);
+            prop.load(in);
+            in.close();
+            ret = prop.toString();
+        }
+    } catch (IOException var7) {
+        Log.e("EloSecureUtil", "GET_DEVICE_INFO: IOException");
+    } catch (Exception var8) {
+        Log.e("EloSecureUtil", "GET_DEVICE_INFO: Exception");
+    }
+
+    return ret;
+  }
 }

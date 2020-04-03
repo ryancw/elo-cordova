@@ -1,7 +1,8 @@
 function EloPlugin() {}
 
-EloPlugin.prototype.fetchParams = function(successCallback, errorCallback) {
+EloPlugin.prototype.fetchParams = function(param, successCallback, errorCallback) {
   var options = {};
+  options.param = param;
   cordova.exec(successCallback, errorCallback, 'EloPlugin', 'fetchParams', [options]);
 }
 
