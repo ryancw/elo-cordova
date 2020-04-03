@@ -27,7 +27,12 @@ public class EloPlugin extends CordovaPlugin {
       String ret = EloSecureUtil.getDeviceInfo(mContext);          
       //String result = parseProp(ret, "pin");
       Properties prop = new Properties();
-      prop.load(new StringReader(ret));
+      try {
+        prop.load(new StringReader(ret));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      
       JSONObject jsonProps = new JSONObject(prop);
       String result = jsonProps.toString();
 
