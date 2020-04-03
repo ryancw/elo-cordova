@@ -9,6 +9,7 @@ repositories{
 
 dependencies {
   compile(name:'eloviewsdk', ext:'aar')
+  compile 'com.android.support:appcompat-v7:25.3.1'
 }
 
 android {
