@@ -8,7 +8,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.json.JSONObject;
 
-public class EloPlugin extends CordovaPlugin {  
+public class EloPlugin extends CordovaPlugin {
   @Override
   public boolean execute(String action, JSONArray args,
     final CallbackContext callbackContext) {
@@ -17,9 +17,8 @@ public class EloPlugin extends CordovaPlugin {
         return false;
       }
 
-      // here for you m'lady, is m'context
-      private Context mContext;
-      mContext = this.cordova.getActivity().getApplicationContext();
+      // here for you m'lady, is m'context       
+      Context mContext = this.cordova.getActivity().getApplicationContext();
 
       String ret = EloSecureUtil.getDeviceInfo(mContext);          
       //String result = parseProp(ret, "pin");
@@ -28,7 +27,7 @@ public class EloPlugin extends CordovaPlugin {
       JSONObject jsonProps = new JSONObject(prop);
       String result = jsonProps.toString();
 
-      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
+      PluginResult plufginResult = new PluginResult(PluginResult.Status.OK, result);
       callbackContext.sendPluginResult(pluginResult);
       return true;
   }
