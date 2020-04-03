@@ -33,9 +33,15 @@ public class EloPlugin extends CordovaPlugin {
       } catch (IOException e) {
         e.printStackTrace();
       }
-      
-      JSONObject jsonProps = new JSONObject(prop);
-      String result = jsonProps.toString();
+
+      String result;
+
+      try {
+        JSONObject jsonProps = new JSONObject(prop);
+        result = jsonProps.toString();
+      } catch (Exception e) {
+        result = "PARSEERZZERROR:" + e.toString();
+      }            
 
       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
       callbackContext.sendPluginResult(pluginResult);
