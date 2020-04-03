@@ -26,7 +26,12 @@ public class EloPlugin extends CordovaPlugin {
       Context mContext = this.cordova.getActivity().getApplicationContext();
       String ret = EloSecureUtil.getDeviceInfo(mContext);
 
-      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, ret);
+      Boolean sdkExists = EloSecureUtil.isEloViewSDKExists(mContext);
+
+      String sdkVer = EloSecureUtil.getSDKVersion(mContext);
+
+      String allInfo = "device_info: " + ret + " | sdk_enabled: " + sdkExists.toString() + " | sdk_version: " + sdkVer;
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, allInfo);
       callbackContext.sendPluginResult(pluginResult);    
       return true;
 
