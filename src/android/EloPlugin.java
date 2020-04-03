@@ -5,6 +5,7 @@ import android.content.Context;
 
 import java.io.StringReader;
 import java.util.Properties;
+import java.io.IOException;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
