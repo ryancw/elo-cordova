@@ -42,25 +42,15 @@ public class EloPlugin extends CordovaPlugin {
       
       // here for you m'lady, is m'context       
       Context mContext = this.cordova.getActivity().getApplicationContext();
-      String deviceInfo = this.getDeviceInfo(); //EloSecureUtil.getDeviceInfo(mContext);
+      Properties deviceInfo = this.getDeviceInfo(); //EloSecureUtil.getDeviceInfo(mContext);
+      String result = deviceInfo.getProperty(param);
 
-      Properties prop = new Properties();
-      try {
-        prop.load(new StringReader(deviceInfo));
-      } catch (IOException e) {
-        callbackContext.error("Error encountered: " + e.getMessage());
-        return false;
-      }
-
-      String result = prop.getProperty(param);
-
-      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, deviceInfo);
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
       callbackContext.sendPluginResult(pluginResult); 
       return true;
   }
 
-  private static String getDeviceInfo() {
-    String ret = null;
+  private static Properties getDeviceInfo() {
     Properties prop = new Properties();
     FileInputStream in = null;
     File file = null;
@@ -72,7 +62,6 @@ public class EloPlugin extends CordovaPlugin {
             in = new FileInputStream(file);
             prop.load(in);
             in.close();
-            ret = prop.toString();
         }
     } catch (IOException var7) {
         Log.e("EloSecureUtil", "GET_DEVICE_INFO: IOException");
@@ -80,6 +69,6 @@ public class EloPlugin extends CordovaPlugin {
         Log.e("EloSecureUtil", "GET_DEVICE_INFO: Exception");
     }
 
-    return ret;
+    return prop;
   }
 }
